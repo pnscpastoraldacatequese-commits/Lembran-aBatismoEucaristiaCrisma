@@ -3,110 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lembranças Sacramentos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <title>Gerador de Lembranças</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background: #f0f0f0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .controls { width: 100%; max-width: 700px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 30px; }
-        textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; }
-        .btn-group { display: flex; gap: 10px; }
-        .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; color: white; }
+        body { font-family: 'Inter', sans-serif; background: #f0f0f0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .controls { width: 100%; max-width: 800px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        textarea, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit; }
+        .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #27ae60; color: white; width: 100%; margin-top: 10px; }
         
-        /* Container flexível */
-        .container { display: flex; flex-wrap: wrap; justify-content: center; background: white; margin: 0 auto; }
+        .container { background: white; display: block; }
         
-        /* Tamanho Batismo (A4 vertical dividido em 2) */
-        .size-batismo { width: 10.5cm; height: 14.85cm; border: 0.1mm solid #ddd; }
-        
-        /* Tamanho Demais (18x27 cm) */
-        .size-outros { width: 18cm; height: 27cm; border: 0.1mm solid #ddd; }
-
+        /* Definição de Tamanhos */
         .card { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            position: relative; box-sizing: border-box; overflow: hidden;
+            position: relative; 
+            box-sizing: border-box; 
+            overflow: hidden; 
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            page-break-after: always;
+            margin: 0 auto;
         }
 
-        .bg-batismo { 
-            background-image: url('https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/b6d702f7c4cc79fcf6877fae13a6e10a81fa491a/Batismo.png'); 
-            background-size: 100% 100%; 
+        .size-a4 { width: 21cm; height: 29.7cm; } /* Batismo em folha cheia */
+        .size-special { width: 18cm; height: 27cm; } /* Eucaristia/Crisma */
+
+        /* Estilização dos Textos */
+        .content {
+            position: absolute;
+            top: 25%; /* Ajuste aqui para subir ou descer o bloco de texto */
+            left: 10%;
+            right: 10%;
+            text-align: center;
+            line-height: 1.8;
+            font-size: 18px;
+            color: #000;
         }
 
-        .card-clean { background: #fff; }
-        .moldura {
-            position: absolute; top: 1cm; left: 1cm; right: 1cm; bottom: 1cm;
-            border: 3px solid #d4af37; pointer-events: none;
-        }
+        .nome-principal { font-size: 32px; font-weight: bold; display: block; margin-bottom: 20px; }
+        b { font-weight: 700; }
 
-        .nome { 
-            font-family: 'Great Vibes', cursive; text-align: center; color: #333; z-index: 10;
-            text-shadow: 0px 0px 8px rgba(255,255,255,0.9);
+        .assinatura {
+            position: absolute;
+            bottom: 15%;
+            left: 0;
+            right: 0;
+            text-align: center;
         }
-        
-        /* Ajuste de fonte por tamanho */
-        .size-batismo .nome { font-size: 45px; width: 80%; }
-        .size-outros .nome { font-size: 70px; width: 90%; }
+        .linha { width: 60%; border-top: 1px solid #000; margin: 0 auto 5px; }
 
         @media print {
-            @page { margin: 0; }
             body { background: white; padding: 0; }
             .controls { display: none; }
-            .card { border: none; page-break-after: always; }
-            /* Se for batismo, permite dois por página se couber */
-            .size-batismo { page-break-after: auto; }
-            .size-batismo:nth-child(2n) { page-break-after: always; }
+            .card { border: none; }
         }
     </style>
 </head>
 <body>
 
     <div class="controls">
-        <label><b>Tipo de Documento e Tamanho:</b></label>
+        <label><b>1. Selecione o Sacramento:</b></label>
         <select id="tipo">
-            <option value="batismo">Batismo (Papel A4 - 2 por folha)</option>
-            <option value="eucaristia">Primeira Eucaristia (18x27 cm)</option>
+            <option value="batismo">Batismo (Papel A4)</option>
+            <option value="eucaristia">Eucaristia (18x27 cm)</option>
             <option value="crisma">Crisma (18x27 cm)</option>
         </select>
 
-        <textarea id="inputRaw" rows="3" placeholder="Cole os nomes aqui..."></textarea>
-        <button class="btn" style="background:#4A90E2" onclick="processar()">1. Processar Nomes</button>
-        <textarea id="inputFinal" rows="3" style="margin-top:10px"></textarea>
+        <label><b>2. Dados (Um por linha, use ";" para separar os campos):</b><br>
+        <small>Formato: Nome; Nascimento; Filiação; Data Sacramento; Padrinhos (apenas batismo)</small></label>
+        <textarea id="inputDados" rows="6" placeholder="Ex: João Silva; 10/05/2015; Maria e José; 20/04/2026; Pedro e Ana"></textarea>
         
-        <div class="btn-group">
-            <button class="btn" style="background:#27ae60" onclick="gerar()">2. Gerar Visualização</button>
-            <button class="btn" style="background:#555" onclick="window.print()">3. Imprimir</button>
-        </div>
+        <button class="btn" onclick="gerar()">Gerar Lembranças</button>
+        <button class="btn" style="background:#555" onclick="window.print()">Imprimir / Salvar PDF</button>
     </div>
 
-    <div class="container" id="container"></div>
+    <div id="container"></div>
 
     <script>
-        function processar() {
-            const raw = document.getElementById('inputRaw').value;
-            const lista = raw.split(/[,\n]/).map(n => n.trim()).filter(n => n.length > 0);
-            document.getElementById('inputFinal').value = lista.join(', ');
-        }
+        const configs = {
+            batismo: {
+                img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/b6d702f7c4cc79fcf6877fae13a6e10a81fa491a/Batismo.png',
+                class: 'size-a4'
+            },
+            eucaristia: {
+                img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Eucaristia.png',
+                class: 'size-special'
+            },
+            crisma: {
+                img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Crisma.png',
+                class: 'size-special'
+            }
+        };
 
         function gerar() {
-            const nomes = document.getElementById('inputFinal').value.split(',').map(n => n.trim());
             const tipo = document.getElementById('tipo').value;
+            const rawData = document.getElementById('inputDados').value.trim().split('\n');
             const container = document.getElementById('container');
             container.innerHTML = '';
 
-            nomes.forEach(nome => {
-                if (!nome) return;
+            rawData.forEach(linha => {
+                if (!linha) return;
+                const dados = linha.split(';').map(d => d.trim());
+                const [nome, nasc, pais, dataSacra, padrinhos] = dados;
+
                 const card = document.createElement('div');
-                
+                card.className = `card ${configs[tipo].class}`;
+                card.style.backgroundImage = `url('${configs[tipo].img}')`;
+
+                let htmlContent = '';
+
                 if (tipo === 'batismo') {
-                    card.className = 'card size-batismo bg-batismo';
-                    card.innerHTML = `<div class="nome">${nome}</div>`;
+                    htmlContent = `
+                        <div class="content">
+                            <span class="nome-principal">${nome}</span>
+                            Nascido em <b>${nasc}</b><br>
+                            Filho de <b>${pais}</b><br>
+                            Recebeu o Batismo na <b>Paróquia Nossa Senhora da Conceição</b> no dia <b>${dataSacra}</b>.<br>
+                            Foram padrinhos <b>${padrinhos}</b>.
+                        </div>`;
+                } else if (tipo === 'eucaristia') {
+                    htmlContent = `
+                        <div class="content">
+                            <span class="nome-principal">${nome}</span>
+                            Nascido em <b>${nasc}</b><br>
+                            Filho de <b>${pais}</b><br>
+                            Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.
+                        </div>`;
                 } else {
-                    card.className = 'card size-outros card-clean';
-                    card.innerHTML = `
-                        <div class="moldura"></div>
-                        <div style="font-size: 18px; color: #888; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 20px;">Lembrança de ${tipo.toUpperCase()}</div>
-                        <div class="nome">${nome}</div>
-                    `;
+                    htmlContent = `
+                        <div class="content">
+                            <span class="nome-principal">${nome}</span>
+                            Nascido em <b>${nasc}</b><br>
+                            Filho de <b>${pais}</b><br>
+                            Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.
+                        </div>`;
                 }
+
+                card.innerHTML = htmlContent + `
+                    <div class="assinatura">
+                        <div class="linha"></div>
+                        <span>Pe João Marcos Polak</span>
+                    </div>`;
+
                 container.appendChild(card);
             });
         }
