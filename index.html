@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Lembranças</title>
+    <title>Gerador de Lembranças Profissional</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background: #f0f0f0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
@@ -11,7 +11,7 @@
         textarea, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px; border: 1px solid #ccc; font-family: inherit; }
         .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #27ae60; color: white; width: 100%; margin-top: 10px; }
         
-        .container { background: white; display: block; }
+        #container { background: white; }
         
         .card { 
             position: relative; 
@@ -23,31 +23,51 @@
             margin: 0 auto;
         }
 
+        /* Configurações de Tamanho de Papel */
         .size-a4 { width: 21cm; height: 29.7cm; } 
         .size-special { width: 18cm; height: 27cm; } 
 
-        .content {
-            position: absolute;
-            top: 30%; /* Ajuste a altura do texto aqui */
-            left: 12%;
-            right: 12%;
-            text-align: center;
-            line-height: 1.8;
-            font-size: 19px;
-            color: #000;
-        }
-
-        .nome-principal { font-size: 34px; font-weight: bold; display: block; margin-bottom: 25px; text-transform: uppercase; }
+        /* Estilo Geral de Texto */
+        .content { position: absolute; color: #000; line-height: 1.6; font-size: 17px; text-align: left; }
+        .nome-principal { font-size: 28px; font-weight: bold; display: block; margin-bottom: 10px; text-transform: uppercase; }
         b { font-weight: 700; }
+        .assinatura { position: absolute; text-align: center; }
+        .linha { width: 200px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
-        .assinatura {
-            position: absolute;
-            bottom: 12%;
-            left: 0;
-            right: 0;
+        /* POSICIONAMENTO ESPECÍFICO - BATISMO */
+        .card-batismo .content {
+            left: 4cm;
+            bottom: 10cm;
+            right: 2cm;
+        }
+        .card-batismo .assinatura {
+            left: 11cm;
+            bottom: 5cm;
+        }
+
+        /* POSICIONAMENTO ESPECÍFICO - EUCARISTIA */
+        .card-eucaristia .content {
+            top: 9cm;
+            bottom: 5.5cm;
+            left: 2cm;
+            right: 2cm;
             text-align: center;
         }
-        .linha { width: 55%; border-top: 1px solid #000; margin: 0 auto 5px; }
+        .card-eucaristia .assinatura {
+            bottom: 3cm;
+            left: 0; right: 0;
+        }
+
+        /* POSICIONAMENTO ESPECÍFICO - CRISMA */
+        .card-crisma .content {
+            left: 7.0cm;
+            top: 10.5cm;
+            right: 2cm;
+        }
+        .card-crisma .assinatura {
+            bottom: 4cm;
+            left: 0; right: 0;
+        }
 
         @media print {
             body { background: white; padding: 0; }
@@ -61,16 +81,16 @@
     <div class="controls">
         <label><b>1. Selecione o Sacramento:</b></label>
         <select id="tipo">
-            <option value="batismo">Batismo (Papel A4)</option>
-            <option value="eucaristia">Primeira Eucaristia (18x27 cm)</option>
-            <option value="crisma" selected>Crisma (18x27 cm)</option>
+            <option value="batismo">Batismo (A4 - Margem esq 4cm / Fundo 10cm)</option>
+            <option value="eucaristia">Eucaristia (18x27 - Topo 9cm / Fundo 5.5cm)</option>
+            <option value="crisma">Crisma (18x27 - Esq 7cm / Altura 10.5cm)</option>
         </select>
 
         <label><b>2. Dados (Nome; Nascimento; Pais; Data; Padrinhos):</b></label>
-        <textarea id="inputDados" rows="6" placeholder="Ex: Lucas Oliveira; 12/08/2010; Maria e José; 15/11/2026; Roberto e Cláudia"></textarea>
+        <textarea id="inputDados" rows="6" placeholder="Nome; Nascimento; Pais; Data; Padrinhos"></textarea>
         
         <button class="btn" onclick="gerar()">Gerar Lembranças</button>
-        <button class="btn" style="background:#555" onclick="window.print()">Imprimir / PDF</button>
+        <button class="btn" style="background:#555" onclick="window.print()">Imprimir / Salvar PDF</button>
     </div>
 
     <div id="container"></div>
@@ -79,15 +99,15 @@
         const configs = {
             batismo: {
                 img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/b6d702f7c4cc79fcf6877fae13a6e10a81fa491a/Batismo.png',
-                class: 'size-a4'
+                class: 'size-a4 card-batismo'
             },
             eucaristia: {
                 img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Eucaristia.png',
-                class: 'size-special'
+                class: 'size-special card-eucaristia'
             },
             crisma: {
                 img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Crisma.png',
-                class: 'size-special'
+                class: 'size-special card-crisma'
             }
         };
 
@@ -108,17 +128,20 @@
                 let textoHtml = "";
                 if (tipo === 'batismo') {
                     textoHtml = `
+                        <span class="nome-principal">${nome}</span>
                         Nascido em <b>${nasc}</b><br>
                         Filho de <b>${pais}</b><br>
                         Recebeu o Batismo na <b>Paróquia Nossa Senhora da Conceição</b> no dia <b>${dataSacra}</b>.<br>
                         Foram padrinhos <b>${padrinhos}</b>.`;
                 } else if (tipo === 'eucaristia') {
                     textoHtml = `
+                        <span class="nome-principal">${nome}</span>
                         Nascido em <b>${nasc}</b><br>
                         Filho de <b>${pais}</b><br>
                         Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.`;
                 } else {
                     textoHtml = `
+                        <span class="nome-principal">${nome}</span>
                         Nascido em <b>${nasc}</b><br>
                         Filho de <b>${pais}</b><br>
                         Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.<br>
@@ -126,10 +149,7 @@
                 }
 
                 card.innerHTML = `
-                    <div class="content">
-                        <span class="nome-principal">${nome}</span>
-                        ${textoHtml}
-                    </div>
+                    <div class="content">${textoHtml}</div>
                     <div class="assinatura">
                         <div class="linha"></div>
                         <span>Pe João Marcos Polak</span>
