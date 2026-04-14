@@ -13,7 +13,6 @@
         
         .container { background: white; display: block; }
         
-        /* Definição de Tamanhos */
         .card { 
             position: relative; 
             box-sizing: border-box; 
@@ -24,32 +23,31 @@
             margin: 0 auto;
         }
 
-        .size-a4 { width: 21cm; height: 29.7cm; } /* Batismo em folha cheia */
-        .size-special { width: 18cm; height: 27cm; } /* Eucaristia/Crisma */
+        .size-a4 { width: 21cm; height: 29.7cm; } 
+        .size-special { width: 18cm; height: 27cm; } 
 
-        /* Estilização dos Textos */
         .content {
             position: absolute;
-            top: 25%; /* Ajuste aqui para subir ou descer o bloco de texto */
-            left: 10%;
-            right: 10%;
+            top: 30%; /* Ajuste a altura do texto aqui */
+            left: 12%;
+            right: 12%;
             text-align: center;
             line-height: 1.8;
-            font-size: 18px;
+            font-size: 19px;
             color: #000;
         }
 
-        .nome-principal { font-size: 32px; font-weight: bold; display: block; margin-bottom: 20px; }
+        .nome-principal { font-size: 34px; font-weight: bold; display: block; margin-bottom: 25px; text-transform: uppercase; }
         b { font-weight: 700; }
 
         .assinatura {
             position: absolute;
-            bottom: 15%;
+            bottom: 12%;
             left: 0;
             right: 0;
             text-align: center;
         }
-        .linha { width: 60%; border-top: 1px solid #000; margin: 0 auto 5px; }
+        .linha { width: 55%; border-top: 1px solid #000; margin: 0 auto 5px; }
 
         @media print {
             body { background: white; padding: 0; }
@@ -64,16 +62,15 @@
         <label><b>1. Selecione o Sacramento:</b></label>
         <select id="tipo">
             <option value="batismo">Batismo (Papel A4)</option>
-            <option value="eucaristia">Eucaristia (18x27 cm)</option>
-            <option value="crisma">Crisma (18x27 cm)</option>
+            <option value="eucaristia">Primeira Eucaristia (18x27 cm)</option>
+            <option value="crisma" selected>Crisma (18x27 cm)</option>
         </select>
 
-        <label><b>2. Dados (Um por linha, use ";" para separar os campos):</b><br>
-        <small>Formato: Nome; Nascimento; Filiação; Data Sacramento; Padrinhos (apenas batismo)</small></label>
-        <textarea id="inputDados" rows="6" placeholder="Ex: João Silva; 10/05/2015; Maria e José; 20/04/2026; Pedro e Ana"></textarea>
+        <label><b>2. Dados (Nome; Nascimento; Pais; Data; Padrinhos):</b></label>
+        <textarea id="inputDados" rows="6" placeholder="Ex: Lucas Oliveira; 12/08/2010; Maria e José; 15/11/2026; Roberto e Cláudia"></textarea>
         
         <button class="btn" onclick="gerar()">Gerar Lembranças</button>
-        <button class="btn" style="background:#555" onclick="window.print()">Imprimir / Salvar PDF</button>
+        <button class="btn" style="background:#555" onclick="window.print()">Imprimir / PDF</button>
     </div>
 
     <div id="container"></div>
@@ -102,43 +99,37 @@
 
             rawData.forEach(linha => {
                 if (!linha) return;
-                const dados = linha.split(';').map(d => d.trim());
-                const [nome, nasc, pais, dataSacra, padrinhos] = dados;
+                const [nome, nasc, pais, dataSacra, padrinhos] = linha.split(';').map(d => d.trim());
 
                 const card = document.createElement('div');
                 card.className = `card ${configs[tipo].class}`;
                 card.style.backgroundImage = `url('${configs[tipo].img}')`;
 
-                let htmlContent = '';
-
+                let textoHtml = "";
                 if (tipo === 'batismo') {
-                    htmlContent = `
-                        <div class="content">
-                            <span class="nome-principal">${nome}</span>
-                            Nascido em <b>${nasc}</b><br>
-                            Filho de <b>${pais}</b><br>
-                            Recebeu o Batismo na <b>Paróquia Nossa Senhora da Conceição</b> no dia <b>${dataSacra}</b>.<br>
-                            Foram padrinhos <b>${padrinhos}</b>.
-                        </div>`;
+                    textoHtml = `
+                        Nascido em <b>${nasc}</b><br>
+                        Filho de <b>${pais}</b><br>
+                        Recebeu o Batismo na <b>Paróquia Nossa Senhora da Conceição</b> no dia <b>${dataSacra}</b>.<br>
+                        Foram padrinhos <b>${padrinhos}</b>.`;
                 } else if (tipo === 'eucaristia') {
-                    htmlContent = `
-                        <div class="content">
-                            <span class="nome-principal">${nome}</span>
-                            Nascido em <b>${nasc}</b><br>
-                            Filho de <b>${pais}</b><br>
-                            Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.
-                        </div>`;
+                    textoHtml = `
+                        Nascido em <b>${nasc}</b><br>
+                        Filho de <b>${pais}</b><br>
+                        Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.`;
                 } else {
-                    htmlContent = `
-                        <div class="content">
-                            <span class="nome-principal">${nome}</span>
-                            Nascido em <b>${nasc}</b><br>
-                            Filho de <b>${pais}</b><br>
-                            Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.
-                        </div>`;
+                    textoHtml = `
+                        Nascido em <b>${nasc}</b><br>
+                        Filho de <b>${pais}</b><br>
+                        Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.<br>
+                        Foram padrinhos <b>${padrinhos}</b>.`;
                 }
 
-                card.innerHTML = htmlContent + `
+                card.innerHTML = `
+                    <div class="content">
+                        <span class="nome-principal">${nome}</span>
+                        ${textoHtml}
+                    </div>
                     <div class="assinatura">
                         <div class="linha"></div>
                         <span>Pe João Marcos Polak</span>
