@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Lembranças Profissional</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; background: #f0f0f0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .controls { width: 100%; max-width: 800px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
@@ -28,17 +28,27 @@
         .size-special { width: 18cm; height: 27cm; } 
 
         /* Estilo Geral de Texto */
-        .content { position: absolute; color: #000; line-height: 1.6; font-size: 17px; text-align: left; }
-        .nome-principal { font-size: 28px; font-weight: bold; display: block; margin-bottom: 10px; text-transform: uppercase; }
+        .content { position: absolute; color: #000; line-height: 1.6; font-size: 18px; text-align: left; }
+        
+        /* Fonte Great Vibes para o Nome */
+        .nome-principal { 
+            font-family: 'Great Vibes', cursive; 
+            font-size: 52px; 
+            font-weight: 400; 
+            display: block; 
+            margin-bottom: 5px; 
+            color: #000;
+        }
+
         b { font-weight: 700; }
-        .assinatura { position: absolute; text-align: center; }
+        .assinatura { position: absolute; text-align: center; font-size: 16px; }
         .linha { width: 200px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
         /* POSICIONAMENTO ESPECÍFICO - BATISMO */
         .card-batismo .content {
             left: 4cm;
             bottom: 10cm;
-            right: 2cm;
+            right: 2.5cm;
         }
         .card-batismo .assinatura {
             left: 11cm;
@@ -49,8 +59,8 @@
         .card-eucaristia .content {
             top: 9cm;
             bottom: 5.5cm;
-            left: 2cm;
-            right: 2cm;
+            left: 2.5cm;
+            right: 2.5cm;
             text-align: center;
         }
         .card-eucaristia .assinatura {
@@ -60,9 +70,9 @@
 
         /* POSICIONAMENTO ESPECÍFICO - CRISMA */
         .card-crisma .content {
-            left: 7.0cm;
+            left: 7cm;
             top: 10.5cm;
-            right: 2cm;
+            right: 2.5cm;
         }
         .card-crisma .assinatura {
             bottom: 4cm;
@@ -82,12 +92,12 @@
         <label><b>1. Selecione o Sacramento:</b></label>
         <select id="tipo">
             <option value="batismo">Batismo (A4 - Margem esq 4cm / Fundo 10cm)</option>
-            <option value="eucaristia">Eucaristia (18x27 - Topo 9cm / Fundo 5.5cm)</option>
+            <option value="eucaristia">Primeira Eucaristia (18x27 - Topo 9cm / Fundo 5.5cm)</option>
             <option value="crisma">Crisma (18x27 - Esq 7cm / Altura 10.5cm)</option>
         </select>
 
         <label><b>2. Dados (Nome; Nascimento; Pais; Data; Padrinhos):</b></label>
-        <textarea id="inputDados" rows="6" placeholder="Nome; Nascimento; Pais; Data; Padrinhos"></textarea>
+        <textarea id="inputDados" rows="6" placeholder="Nome do Catequizando; Data Nascimento; Nome dos Pais; Data Sacramento; Nome dos Padrinhos"></textarea>
         
         <button class="btn" onclick="gerar()">Gerar Lembranças</button>
         <button class="btn" style="background:#555" onclick="window.print()">Imprimir / Salvar PDF</button>
