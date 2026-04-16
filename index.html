@@ -32,36 +32,28 @@
             position: absolute; 
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             text-align: center;
             line-height: 1.4; 
-            font-size: 28px; /* Fonte aumentada conforme solicitado */
+            font-size: 28px;
         }
         
         .nome-principal { font-size: 54px; margin-bottom: 12px; }
         b { font-weight: 700; }
         
+        /* Assinatura com espaço de 3 linhas em relação ao texto anterior */
         .assinatura { 
-            position: absolute; 
+            margin-top: 3em; 
             text-align: center; 
             font-size: 24px; 
-            left: 0; 
-            right: 0;
+            width: 100%;
         }
         .linha { width: 280px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
-        /* BATISMO */
-        .card-batismo .content { top: 8cm; bottom: 10cm; left: 4.5cm; right: 2cm; }
-        .card-batismo .assinatura { bottom: 8.2cm; left: 4.5cm; }
-
-        /* EUCARISTIA */
-        .card-eucaristia .content { top: 11cm; bottom: 6cm; left: 2cm; right: 2cm; }
-        .card-eucaristia .assinatura { bottom: 4.2cm; } 
-
-        /* CRISMA */
-        .card-crisma .content { top: 11cm; left: 7.5cm; right: 2cm; bottom: 6cm; }
-        .card-crisma .assinatura { bottom: 4.2cm; left: 7.5cm; }
+        /* MARGENS DE TOPO E LATERAIS CONFORME SOLICITADO */
+        .card-batismo .content { top: 8cm; left: 4.5cm; right: 2cm; }
+        .card-eucaristia .content { top: 11cm; left: 2cm; right: 2cm; }
+        .card-crisma .content { top: 11cm; left: 7.5cm; right: 2cm; }
 
         @media print {
             body { background: white; padding: 0; }
@@ -96,7 +88,7 @@
             crisma: { img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Crisma.png', class: 'size-special card-crisma' }
         };
 
-        const paroquiaCompleta = "<b>Paróquia Nossa Senhora da Conceição - Butiatuvinha - Curitiba/PR</b>";
+        const paroquia = "<b>Paróquia Nossa Senhora da Conceição - Butiatuvinha - Curitiba/PR</b>";
 
         function gerar() {
             const tipo = document.getElementById('tipo').value;
@@ -114,15 +106,23 @@
 
                 let corpo = "";
                 if (tipo === 'batismo') {
-                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Recebeu o Batismo na ${paroquiaCompleta} no dia <b>${dataSacra}</b>.<br>Foram padrinhos <b>${padrinhos}</b>.`;
+                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Recebeu o Batismo na ${paroquia} no dia <b>${dataSacra}</b>.<br>Foram padrinhos <b>${padrinhos}</b>.`;
                 } else if (tipo === 'eucaristia') {
-                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na ${paroquiaCompleta}.`;
+                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na ${paroquia}.`;
                 } else {
-                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na ${paroquiaCompleta}.<br>Foram padrinhos <b>${padrinhos}</b>.`;
+                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na ${paroquia}.<br>Foram padrinhos <b>${padrinhos}</b>.`;
                 }
 
-                card.innerHTML = `<div class="content"><span class="nome-principal">${nome}</span><div>${corpo}</div></div>
-                    <div class="assinatura"><div class="linha"></div><div>Celebrante</div><span>Pe João Marcos Polak</span></div>`;
+                card.innerHTML = `
+                    <div class="content">
+                        <span class="nome-principal">${nome}</span>
+                        <div>${corpo}</div>
+                        <div class="assinatura">
+                            <div class="linha"></div>
+                            <div>Celebrante</div>
+                            <span>Pe João Marcos Polak</span>
+                        </div>
+                    </div>`;
                 container.appendChild(card);
             });
         }
