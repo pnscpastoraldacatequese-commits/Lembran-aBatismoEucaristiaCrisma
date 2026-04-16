@@ -36,11 +36,11 @@
             align-items: center;
             text-align: center;
             line-height: 1.4; 
-            font-size: 22px; /* Reduzido de 28px */
+            font-size: 22px; 
         }
         
         .nome-principal { 
-            font-size: 46px; /* Reduzido de 54px */
+            font-size: 46px; 
             margin-bottom: 10px; 
         }
         b { font-weight: 700; }
@@ -53,10 +53,21 @@
         }
         .linha { width: 250px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
-        /* MARGENS MANTIDAS */
+        /* MARGENS ESPECÍFICAS */
+        
+        /* Batismo */
         .card-batismo .content { top: 8cm; bottom: 10cm; left: 4.5cm; right: 2cm; }
+
+        /* Eucaristia */
         .card-eucaristia .content { top: 11cm; bottom: 6.5cm; left: 2cm; right: 2cm; }
-        .card-crisma .content { top: 12cm; bottom: 6cm; left: 7.5cm; right: 2cm; }
+
+        /* Crisma: Ajustado para 15cm de margem superior */
+        .card-crisma .content { 
+            top: 15cm; 
+            bottom: 6cm; 
+            left: 7.5cm; 
+            right: 2cm; 
+        }
 
         @media print {
             body { background: white; padding: 0; }
@@ -93,7 +104,6 @@
 
         const paroquia = "<b>Paróquia Nossa Senhora da Conceição - Butiatuvinha - Curitiba/PR</b>";
 
-        // Função para converter "CAIXA ALTA" em "Primeira Letra Maiúscula"
         function formatarTexto(str) {
             if (!str) return "";
             const excecoes = ['de', 'do', 'da', 'dos', 'das', 'e'];
