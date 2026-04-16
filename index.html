@@ -36,47 +36,32 @@
             align-items: center;
             text-align: center;
             line-height: 1.4; 
-            font-size: 24px; 
+            font-size: 28px; /* Fonte aumentada conforme solicitado */
         }
         
-        .nome-principal { font-size: 48px; margin-bottom: 10px; }
+        .nome-principal { font-size: 54px; margin-bottom: 12px; }
         b { font-weight: 700; }
         
         .assinatura { 
             position: absolute; 
             text-align: center; 
-            font-size: 22px; 
+            font-size: 24px; 
             left: 0; 
             right: 0;
-            bottom: 2cm; /* Próximo à margem inferior */
         }
-        .linha { width: 250px; border-top: 1px solid #000; margin: 0 auto 5px; }
+        .linha { width: 280px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
-        /* MARGENS ESPECÍFICAS SOLICITADAS */
-        
-        /* Batismo: Topo 8cm, Fundo 10cm, Esquerda 4.5cm */
-        .card-batismo .content { 
-            top: 8cm; 
-            bottom: 10cm; 
-            left: 4.5cm; 
-            right: 2cm; 
-        }
+        /* BATISMO */
+        .card-batismo .content { top: 8cm; bottom: 10cm; left: 4.5cm; right: 2cm; }
+        .card-batismo .assinatura { bottom: 8.2cm; left: 4.5cm; }
 
-        /* Eucaristia: Topo 11cm, Fundo 6cm */
-        .card-eucaristia .content { 
-            top: 11cm; 
-            bottom: 6cm; 
-            left: 2cm; 
-            right: 2cm; 
-        }
+        /* EUCARISTIA */
+        .card-eucaristia .content { top: 11cm; bottom: 6cm; left: 2cm; right: 2cm; }
+        .card-eucaristia .assinatura { bottom: 4.2cm; } 
 
-        /* Crisma: Topo 11cm, Esquerda 7.5cm */
-        .card-crisma .content { 
-            top: 11cm; 
-            left: 7.5cm; 
-            right: 2cm; 
-            bottom: 6cm;
-        }
+        /* CRISMA */
+        .card-crisma .content { top: 11cm; left: 7.5cm; right: 2cm; bottom: 6cm; }
+        .card-crisma .assinatura { bottom: 4.2cm; left: 7.5cm; }
 
         @media print {
             body { background: white; padding: 0; }
@@ -88,38 +73,30 @@
 <body>
 
     <div class="controls">
-        <label><b>1. Selecione o Sacramento:</b></label>
+        <label><b>1. Sacramento:</b></label>
         <select id="tipo">
-            <option value="batismo">Batismo (Papel A4)</option>
-            <option value="eucaristia">Primeira Eucaristia (18x27 cm)</option>
-            <option value="crisma">Crisma (18x27 cm)</option>
+            <option value="batismo">Batismo (A4)</option>
+            <option value="eucaristia">Primeira Eucaristia (18x27)</option>
+            <option value="crisma">Crisma (18x27)</option>
         </select>
 
-        <label><b>2. Dados (Separados por ponto e vírgula):</b><br>
-        <small>Nome; Nascimento; Naturalidade; Pais; Data Evento; Padrinhos</small></label>
-        <textarea id="inputDados" rows="6" placeholder="Ex: João Silva; 10/05/2015; Curitiba; Maria e José; 20/04/2026; Pedro e Ana"></textarea>
+        <label><b>2. Dados: Nome; Nascimento; Naturalidade; Pais; Data; Padrinhos</b></label>
+        <textarea id="inputDados" rows="4" placeholder="Nome; Nascimento; Naturalidade; Pais; Data; Padrinhos"></textarea>
         
         <button class="btn" onclick="gerar()">Gerar Lembranças</button>
-        <button class="btn" style="background:#555" onclick="window.print()">Imprimir / Salvar PDF</button>
+        <button class="btn" style="background:#555" onclick="window.print()">Imprimir</button>
     </div>
 
     <div id="container"></div>
 
     <script>
         const configs = {
-            batismo: {
-                img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/b6d702f7c4cc79fcf6877fae13a6e10a81fa491a/Batismo.png',
-                class: 'size-a4 card-batismo'
-            },
-            eucaristia: {
-                img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Eucaristia.png',
-                class: 'size-special card-eucaristia'
-            },
-            crisma: {
-                img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Crisma.png',
-                class: 'size-special card-crisma'
-            }
+            batismo: { img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/b6d702f7c4cc79fcf6877fae13a6e10a81fa491a/Batismo.png', class: 'size-a4 card-batismo' },
+            eucaristia: { img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Eucaristia.png', class: 'size-special card-eucaristia' },
+            crisma: { img: 'https://raw.githubusercontent.com/pnscpastoraldacatequese-commits/Lembran-aBatismoEucaristiaCrisma/07f4f0d35d72eae5c8a27f9b820acacd1829483b/Crisma.png', class: 'size-special card-crisma' }
         };
+
+        const paroquiaCompleta = "<b>Paróquia Nossa Senhora da Conceição - Butiatuvinha - Curitiba/PR</b>";
 
         function gerar() {
             const tipo = document.getElementById('tipo').value;
@@ -135,37 +112,17 @@
                 card.className = `card ${configs[tipo].class}`;
                 card.style.backgroundImage = `url('${configs[tipo].img}')`;
 
-                let corpoTexto = "";
+                let corpo = "";
                 if (tipo === 'batismo') {
-                    corpoTexto = `
-                        Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>
-                        Filho de <b>${pais}</b>.<br>
-                        Recebeu o Batismo na <b>Paróquia Nossa Senhora da Conceição</b> no dia <b>${dataSacra}</b>.<br>
-                        Foram padrinhos <b>${padrinhos}</b>.`;
+                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Recebeu o Batismo na ${paroquiaCompleta} no dia <b>${dataSacra}</b>.<br>Foram padrinhos <b>${padrinhos}</b>.`;
                 } else if (tipo === 'eucaristia') {
-                    corpoTexto = `
-                        Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>
-                        Filho de <b>${pais}</b>.<br>
-                        Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.`;
+                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na ${paroquiaCompleta}.`;
                 } else {
-                    corpoTexto = `
-                        Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>
-                        Filho de <b>${pais}</b>.<br>
-                        Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.<br>
-                        Foram padrinhos <b>${padrinhos}</b>.`;
+                    corpo = `Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>Filho de <b>${pais}</b>.<br>Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na ${paroquiaCompleta}.<br>Foram padrinhos <b>${padrinhos}</b>.`;
                 }
 
-                card.innerHTML = `
-                    <div class="content">
-                        <span class="nome-principal">${nome}</span>
-                        <div>${corpoTexto}</div>
-                    </div>
-                    <div class="assinatura">
-                        <div class="linha"></div>
-                        <div>Celebrante</div>
-                        <span>Pe João Marcos Polak</span>
-                    </div>`;
-
+                card.innerHTML = `<div class="content"><span class="nome-principal">${nome}</span><div>${corpo}</div></div>
+                    <div class="assinatura"><div class="linha"></div><div>Celebrante</div><span>Pe João Marcos Polak</span></div>`;
                 container.appendChild(card);
             });
         }
