@@ -21,7 +21,6 @@
             background-repeat: no-repeat;
             page-break-after: always;
             margin: 0 auto;
-            /* Aplicando Great Vibes em todo o card */
             font-family: 'Great Vibes', cursive;
             color: #000;
         }
@@ -29,38 +28,55 @@
         .size-a4 { width: 21cm; height: 29.7cm; } 
         .size-special { width: 18cm; height: 27cm; } 
 
-        /* Estilo Geral de Texto */
         .content { 
             position: absolute; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
             line-height: 1.4; 
-            font-size: 24px; /* Aumentado para melhor leitura da fonte cursiva */
-            text-align: left; 
+            font-size: 24px; 
         }
         
-        .nome-principal { 
-            font-size: 52px; 
-            display: block; 
-            margin-bottom: 10px; 
-        }
-
+        .nome-principal { font-size: 48px; margin-bottom: 10px; }
         b { font-weight: 700; }
         
         .assinatura { 
             position: absolute; 
             text-align: center; 
             font-size: 22px; 
+            left: 0; 
+            right: 0;
+            bottom: 2cm; /* Próximo à margem inferior */
         }
-        .linha { width: 220px; border-top: 1px solid #000; margin: 0 auto 5px; }
+        .linha { width: 250px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
-        /* POSICIONAMENTO ATUAL (Aguardando suas medições para ajuste fino) */
-        .card-batismo .content { left: 4cm; bottom: 10cm; right: 2.5cm; }
-        .card-batismo .assinatura { left: 11cm; bottom: 5cm; }
+        /* MARGENS ESPECÍFICAS SOLICITADAS */
+        
+        /* Batismo: Topo 8cm, Fundo 10cm, Esquerda 4.5cm */
+        .card-batismo .content { 
+            top: 8cm; 
+            bottom: 10cm; 
+            left: 4.5cm; 
+            right: 2cm; 
+        }
 
-        .card-eucaristia .content { top: 9cm; bottom: 5.5cm; left: 2.5cm; right: 2.5cm; text-align: center; }
-        .card-eucaristia .assinatura { bottom: 3cm; left: 0; right: 0; }
+        /* Eucaristia: Topo 11cm, Fundo 6cm */
+        .card-eucaristia .content { 
+            top: 11cm; 
+            bottom: 6cm; 
+            left: 2cm; 
+            right: 2cm; 
+        }
 
-        .card-crisma .content { left: 7cm; top: 10.5cm; right: 2.5cm; }
-        .card-crisma .assinatura { bottom: 4cm; left: 0; right: 0; }
+        /* Crisma: Topo 11cm, Esquerda 7.5cm */
+        .card-crisma .content { 
+            top: 11cm; 
+            left: 7.5cm; 
+            right: 2cm; 
+            bottom: 6cm;
+        }
 
         @media print {
             body { background: white; padding: 0; }
@@ -74,13 +90,14 @@
     <div class="controls">
         <label><b>1. Selecione o Sacramento:</b></label>
         <select id="tipo">
-            <option value="batismo">Batismo (A4)</option>
-            <option value="eucaristia">Primeira Eucaristia (18x27)</option>
-            <option value="crisma">Crisma (18x27)</option>
+            <option value="batismo">Batismo (Papel A4)</option>
+            <option value="eucaristia">Primeira Eucaristia (18x27 cm)</option>
+            <option value="crisma">Crisma (18x27 cm)</option>
         </select>
 
-        <label><b>2. Dados (Nome; Nascimento; Pais; Data; Padrinhos):</b></label>
-        <textarea id="inputDados" rows="6" placeholder="Nome; Data Nascimento; Pais; Data Sacramento; Padrinhos"></textarea>
+        <label><b>2. Dados (Separados por ponto e vírgula):</b><br>
+        <small>Nome; Nascimento; Naturalidade; Pais; Data Evento; Padrinhos</small></label>
+        <textarea id="inputDados" rows="6" placeholder="Ex: João Silva; 10/05/2015; Curitiba; Maria e José; 20/04/2026; Pedro e Ana"></textarea>
         
         <button class="btn" onclick="gerar()">Gerar Lembranças</button>
         <button class="btn" style="background:#555" onclick="window.print()">Imprimir / Salvar PDF</button>
@@ -112,39 +129,40 @@
 
             rawData.forEach(linha => {
                 if (!linha) return;
-                const [nome, nasc, pais, dataSacra, padrinhos] = linha.split(';').map(d => d.trim());
+                const [nome, nasc, natural, pais, dataSacra, padrinhos] = linha.split(';').map(d => d.trim());
 
                 const card = document.createElement('div');
                 card.className = `card ${configs[tipo].class}`;
                 card.style.backgroundImage = `url('${configs[tipo].img}')`;
 
-                let textoHtml = "";
+                let corpoTexto = "";
                 if (tipo === 'batismo') {
-                    textoHtml = `
-                        <span class="nome-principal">${nome}</span>
-                        Nascido em <b>${nasc}</b><br>
-                        Filho de <b>${pais}</b><br>
+                    corpoTexto = `
+                        Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>
+                        Filho de <b>${pais}</b>.<br>
                         Recebeu o Batismo na <b>Paróquia Nossa Senhora da Conceição</b> no dia <b>${dataSacra}</b>.<br>
                         Foram padrinhos <b>${padrinhos}</b>.`;
                 } else if (tipo === 'eucaristia') {
-                    textoHtml = `
-                        <span class="nome-principal">${nome}</span>
-                        Nascido em <b>${nasc}</b><br>
-                        Filho de <b>${pais}</b><br>
+                    corpoTexto = `
+                        Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>
+                        Filho de <b>${pais}</b>.<br>
                         Participou pela 1ª vez da Eucaristia no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.`;
                 } else {
-                    textoHtml = `
-                        <span class="nome-principal">${nome}</span>
-                        Nascido em <b>${nasc}</b><br>
-                        Filho de <b>${pais}</b><br>
+                    corpoTexto = `
+                        Nascido em <b>${nasc}</b>. Natural de <b>${natural}</b>.<br>
+                        Filho de <b>${pais}</b>.<br>
                         Recebeu o sacramento do Crisma no dia <b>${dataSacra}</b> na <b>Paróquia Nossa Senhora da Conceição</b>.<br>
                         Foram padrinhos <b>${padrinhos}</b>.`;
                 }
 
                 card.innerHTML = `
-                    <div class="content">${textoHtml}</div>
+                    <div class="content">
+                        <span class="nome-principal">${nome}</span>
+                        <div>${corpoTexto}</div>
+                    </div>
                     <div class="assinatura">
                         <div class="linha"></div>
+                        <div>Celebrante</div>
                         <span>Pe João Marcos Polak</span>
                     </div>`;
 
