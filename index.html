@@ -36,43 +36,27 @@
             align-items: center;
             text-align: center;
             line-height: 1.4; 
-            font-size: 28px;
+            font-size: 22px; /* Reduzido de 28px */
         }
         
-        .nome-principal { font-size: 54px; margin-bottom: 12px; }
+        .nome-principal { 
+            font-size: 46px; /* Reduzido de 54px */
+            margin-bottom: 10px; 
+        }
         b { font-weight: 700; }
         
         .assinatura { 
-            margin-top: 3em; 
+            margin-top: 2.5em; 
             text-align: center; 
-            font-size: 24px; 
+            font-size: 20px; 
             width: 100%;
         }
-        .linha { width: 280px; border-top: 1px solid #000; margin: 0 auto 5px; }
+        .linha { width: 250px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
-        /* BATISMO: 8cm topo / 10cm fundo / 4.5cm esq */
-        .card-batismo .content { 
-            top: 8cm; 
-            bottom: 10cm; 
-            left: 4.5cm; 
-            right: 2cm; 
-        }
-
-        /* EUCARISTIA: 11cm topo / 6.5cm fundo */
-        .card-eucaristia .content { 
-            top: 11cm; 
-            bottom: 6.5cm; 
-            left: 2cm; 
-            right: 2cm; 
-        }
-
-        /* CRISMA: 12cm topo (AJUSTADO) / 6cm fundo / 7.5cm esq */
-        .card-crisma .content { 
-            top: 12cm; 
-            bottom: 6cm;
-            left: 7.5cm; 
-            right: 2cm; 
-        }
+        /* MARGENS MANTIDAS */
+        .card-batismo .content { top: 8cm; bottom: 10cm; left: 4.5cm; right: 2cm; }
+        .card-eucaristia .content { top: 11cm; bottom: 6.5cm; left: 2cm; right: 2cm; }
+        .card-crisma .content { top: 12cm; bottom: 6cm; left: 7.5cm; right: 2cm; }
 
         @media print {
             body { background: white; padding: 0; }
@@ -92,7 +76,7 @@
         </select>
 
         <label><b>2. Dados: Nome; Nascimento; Naturalidade; Pais; Data; Padrinhos</b></label>
-        <textarea id="inputDados" rows="4" placeholder="Nome; Nascimento; Naturalidade; Pais; Data; Padrinhos"></textarea>
+        <textarea id="inputDados" rows="4" placeholder="Ex: JOÃO SILVA; 10/01/2015; CURITIBA; MARIA E JOSÉ; 20/05/2026; PEDRO E ANA"></textarea>
         
         <button class="btn" onclick="gerar()">Gerar Lembranças</button>
         <button class="btn" style="background:#555" onclick="window.print()">Imprimir</button>
@@ -109,6 +93,16 @@
 
         const paroquia = "<b>Paróquia Nossa Senhora da Conceição - Butiatuvinha - Curitiba/PR</b>";
 
+        // Função para converter "CAIXA ALTA" em "Primeira Letra Maiúscula"
+        function formatarTexto(str) {
+            if (!str) return "";
+            const excecoes = ['de', 'do', 'da', 'dos', 'das', 'e'];
+            return str.toLowerCase().split(' ').map((palavra, index) => {
+                if (index !== 0 && excecoes.includes(palavra)) return palavra;
+                return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+            }).join(' ');
+        }
+
         function gerar() {
             const tipo = document.getElementById('tipo').value;
             const rawData = document.getElementById('inputDados').value.trim().split('\n');
@@ -117,7 +111,7 @@
 
             rawData.forEach(linha => {
                 if (!linha) return;
-                const [nome, nasc, natural, pais, dataSacra, padrinhos] = linha.split(';').map(d => d.trim());
+                let [nome, nasc, natural, pais, dataSacra, padrinhos] = linha.split(';').map(d => formatarTexto(d.trim()));
 
                 const card = document.createElement('div');
                 card.className = `card ${configs[tipo].class}`;
