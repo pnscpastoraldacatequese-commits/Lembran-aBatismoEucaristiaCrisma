@@ -28,11 +28,13 @@
         .size-a4 { width: 21cm; height: 29.7cm; } 
         .size-special { width: 18cm; height: 27cm; } 
 
+        /* Bloco de conteúdo centralizado vertical e horizontalmente nas margens */
         .content { 
             position: absolute; 
             display: flex;
             flex-direction: column;
-            align-items: center;
+            justify-content: center; /* Centraliza verticalmente no espaço definido */
+            align-items: center;    /* Centraliza horizontalmente */
             text-align: center;
             line-height: 1.4; 
             font-size: 28px;
@@ -41,7 +43,6 @@
         .nome-principal { font-size: 54px; margin-bottom: 12px; }
         b { font-weight: 700; }
         
-        /* Assinatura com espaço de 3 linhas em relação ao texto anterior */
         .assinatura { 
             margin-top: 3em; 
             text-align: center; 
@@ -50,10 +51,31 @@
         }
         .linha { width: 280px; border-top: 1px solid #000; margin: 0 auto 5px; }
 
-        /* MARGENS DE TOPO E LATERAIS CONFORME SOLICITADO */
-        .card-batismo .content { top: 8cm; left: 4.5cm; right: 2cm; }
-        .card-eucaristia .content { top: 11cm; left: 2cm; right: 2cm; }
-        .card-crisma .content { top: 11cm; left: 7.5cm; right: 2cm; }
+        /* APLICAÇÃO DAS MARGENS TOTAIS (SUPERIOR E INFERIOR) */
+        
+        /* Batismo: 8cm topo até 10cm fundo */
+        .card-batismo .content { 
+            top: 8cm; 
+            bottom: 10cm; 
+            left: 4.5cm; 
+            right: 2cm; 
+        }
+
+        /* Eucaristia: 11cm topo até 6cm fundo */
+        .card-eucaristia .content { 
+            top: 11cm; 
+            bottom: 6cm; 
+            left: 2cm; 
+            right: 2cm; 
+        }
+
+        /* Crisma: 11cm topo até 6cm fundo (inferior mantido para centralização) */
+        .card-crisma .content { 
+            top: 11cm; 
+            bottom: 6cm;
+            left: 7.5cm; 
+            right: 2cm; 
+        }
 
         @media print {
             body { background: white; padding: 0; }
