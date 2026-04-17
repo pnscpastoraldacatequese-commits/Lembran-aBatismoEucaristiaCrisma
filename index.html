@@ -68,12 +68,12 @@
         <label><b>1. Sacramento:</b></label>
         <select id="tipo">
             <option value="batismo">Batismo (A4)</option>
-            <option value="eucaristia">Primeira Eucaristia (18x27)</option>
-            <option value="crisma">Crisma (18x27)</option>
+            <option value="eucaristia">Primeira Eucaristia (18x27 cm)</option>
+            <option value="crisma">Crisma (18x27 cm)</option>
         </select>
 
         <label><b>2. Dados: Nome; Nascimento; Naturalidade (Cidade/UF); Pais; Data; Padrinhos</b></label>
-        <textarea id="inputDados" rows="4" placeholder="Ex: JOÃO SILVA; 10/01/2015; CURITIBA/PR; MARIA E JOSÉ; 20/05/2026; PEDRO E ANA"></textarea>
+        <textarea id="inputDados" rows="4" placeholder="JOÃO SILVA; 10012015; CURITIBA/PR; MARIA E JOSÉ; 20052026; PEDRO E ANA"></textarea>
         
         <button class="btn" onclick="gerar()">Gerar Lembranças</button>
         <button class="btn" style="background:#555" onclick="window.print()">Imprimir</button>
@@ -90,10 +90,26 @@
 
         const paroquia = "<b>Paróquia Nossa Senhora da Conceição - Butiatuvinha - Curitiba/PR</b>";
 
-        function formatarTexto(str) {
+        function formatarData(str) {
+            // Remove qualquer coisa que não seja número
+            let apenasNumeros = str.replace(/\D/g, '');
+            // Se tiver 8 dígitos (DDMMYYYY), aplica a máscara
+            if (apenasNumeros.length === 8) {
+                return apenasNumeros.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+            }
+            // Caso já venha com barras ou outro formato, retorna como está (ou apenas limpa espaços)
+            return str.trim();
+        }
+
+        function formatarTexto(str, campoIndex) {
             if (!str) return "";
             
-            // Lida com a barra da sigla do estado (ex: curitiba/pr -> Curitiba/PR)
+            // Se for o índice 1 (Nascimento) ou 4 (Data Sacramento), formata como data
+            if (campoIndex === 1 || campoIndex === 4) {
+                return formatarData(str);
+            }
+
+            // Lida com Cidade/UF
             if (str.includes('/')) {
                 let partes = str.split('/');
                 let cidade = formatarPalavras(partes[0]);
@@ -120,7 +136,15 @@
 
             rawData.forEach(linha => {
                 if (!linha) return;
-                let [nome, nasc, natural, pais, dataSacra, padrinhos] = linha.split(';').map(d => formatarTexto(d));
+                let partesLinha = linha.split(';');
+                
+                // Formata cada campo individualmente com base no seu índice
+                let nome = formatarTexto(partesLinha[0], 0);
+                let nasc = formatarTexto(partesLinha[1], 1);
+                let natural = formatarTexto(partesLinha[2], 2);
+                let pais = formatarTexto(partesLinha[3], 3);
+                let dataSacra = formatarTexto(partesLinha[4], 4);
+                let padrinhos = partesLinha[5] ? formatarTexto(partesLinha[5], 5) : "";
 
                 const card = document.createElement('div');
                 card.className = `card ${configs[tipo].class}`;
